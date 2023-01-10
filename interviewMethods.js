@@ -153,8 +153,8 @@ export const handleIntake = (record) => {
     } = interview_data;
     record.Assessment = "0600";
     record.FirstReceivedServicesDate = handleInterviewDate(interview_info.date);
-    record.GrantID = "";
-    record.SiteID = "";
+    record.GrantID = "SM85150";
+    record.SiteID = "NORA_DS";
     record.ConductedInterview = 1;
     record.InterviewDate = interview_info.date;
     record.WhyNotConducted = -1;
@@ -284,5 +284,6 @@ export const handleNonIntakeKeys = (record) => {
   record.LikeServices = -1;
   record.Choices = -1;
   record.RecommendAgency = -1;
+  record.OtherDischargeStatus = "";
   return record;
 };
