@@ -1,14 +1,18 @@
 import * as dotenv from "dotenv";
+// import * as path from "path";
+// import * as fs from "fs";
+
 dotenv.config();
 import { MongoClient } from "mongodb";
 import { handleClientDemographics } from "./clientMethods.js";
-import { handleIntake, handleNonIntakeKeys } from "./interviewMethods.js";
+import { handleIntake } from "./interviewMethods.js";
+import { writeToPath } from "@fast-csv/format";
 const { MONGODB_URI, DB_NAME } = process.env;
 const client = new MongoClient(MONGODB_URI);
 const db = client.db(DB_NAME);
 
 const clients_collection = db.collection("client");
-
+// const csv_stream = format({ headers: true });
 async function main() {
   await client.connect();
   const all_intakes = await clients_collection
@@ -46,16 +50,24 @@ async function main() {
       },
     ])
     .toArray();
-  const test_client = all_intakes[0];
-  let formatted_client = handleClientDemographics(test_client);
-  let formatted_interview = handleIntake(formatted_client);
-  formatted_interview = handleNonIntakeKeys(formatted_interview);
-  console.info("Test Intake => ", formatted_interview);
-  //   console.info("All Clients => ", all_clients);
-  return "done";
+  // const test_client = all_intakes[0];
+  // let formatted_client = handleClientDemographics(test_client);
+  // let formatted_interview = handleIntake(formatted_client);
+  // formatted_interview = handleNonIntakeKeys(formatted_interview);
+  // console.info("Test Intake => ", formatted_interview);
+  const formatted_intakes = all_intakes
+    .map((intake) => {
+      let formatted_client = handleClientDemographics(intake);
+      const formatted_interview = handleIntake(formatted_client);
+      return formatted_interview;
+    })
+    .filter((record) => record != null);
+  console.info(formatted_intakes.find(({ ClientID }) => ClientID === 2042));
+  writeToPath("test_intakes.csv", formatted_intakes, { headers: true })
+    .on("error", (err) => console.error(err))
+    .on("finish", () => console.log("done"));
 }
 
 main()
-  .then(console.log)
   .catch(console.error)
   .finally(() => client.close());

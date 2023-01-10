@@ -19,87 +19,109 @@ const convertGender = (genderString) => {
 };
 const handleOtherGender = (genderInt) => (genderInt == "" ? genderInt : -1);
 const convertSexualIdentity = (orientationString) => {
-  switch (orientationString) {
-    case "Asexual":
+  switch (orientationString.trim().toUpperCase()) {
+    case "ASEXUAL":
       return 8;
-    case "Bisexual":
+    case "BISEXUAL":
       return 3;
-    case "Gay or Lesbian (Homosexual)":
+    case "GAY OR LESBIAN":
+    case "LESBIAN_GAY":
+    case "LESBIAN / GAY":
+    case "HOMOSEXUAL":
+    case "GAY OR LESBIAN (HOMOSEXUAL)":
       return 2;
-    case "Pansexual":
+    case "PANSEXUAL":
       return 6;
-    case "Questioning (Queer)":
+    case "QUEER":
+    case "QUESTIONING":
+    case "QUESTIONING (QUEER) (Queer)":
+    case "DON-T_KNOW":
       return 5;
-    case "Straight (Heterosexual)":
+    case "STRAIGHT":
+    case "HETEROSEXUAL":
+    case "STRAIGHT (HETEROSEXUAL)":
       return 1;
     case "N/A":
       return -1;
-    case "Refused":
+    case "ORIENTATION":
+    case "REFUSED":
       return -7;
     default:
-      return orientationString;
+      return orientationString.trim().toUpperCase();
   }
 };
 const handleOtherSexualIdentity = (orientationInt) =>
   orientationInt == "" ? orientationInt : -1;
 const convertBilingual = (bilingualString) => {
-  switch (bilingualString) {
-    case "No":
+  switch (bilingualString.trim().toUpperCase()) {
+    case "NO":
       return 0;
-    case "Yes":
+    case "YES":
       return 1;
     default:
       return bilingualString;
   }
 };
 const convertRace = (raceString) => {
-  switch (raceString) {
-    case "Central American":
+  switch (raceString.trim().toUpperCase()) {
+    case "CENTRAL AMERICAN":
       return 1;
-    case "Cuban":
+    case "CUBAN":
       return 2;
-    case "Dominican":
+    case "DOMINICAN":
       return 3;
-    case "Puerto Rican":
+    case "PUERTO-RICAN":
+    case "PUERTO RICAN":
       return 4;
-    case "South American":
+    case "SOUTH AMERICAN":
       return 5;
-    case "American Indian":
+    case "AMERICAN-INDIAN":
+    case "AMERICAN INDIAN":
       return 6;
-    case "Alaska Native":
+    case "ALASKA-NATIVE":
+    case "ALASKA NATIVE":
       return 7;
-    case "Chinese":
+    case "CHINESE":
       return 8;
-    case "Filipino":
+    case "FILIPINO":
       return 9;
-    case "Guamanian or Chamorro":
+    case "GUAMANIAN OR CHAMORRO":
       return 10;
-    case "Black or African American":
+    case "BLACK OR AFRICAN AMERICAN":
       return 11;
-    case "Korean":
+    case "KOREAN":
       return 12;
-    case "Native Hawaiian":
+    case "NATIVE HAWAIIAN":
       return 13;
-    case "Other Asian":
+    case "ASIAN":
+    case "OTHER ASIAN":
       return 14;
-    case "Other Pacific Islander":
+    case "OTHER PACIFIC ISLANDER":
       return 15;
-    case "Samoan":
+    case "SAMOAN":
       return 16;
-    case "South Asian":
+    case "SOUTH ASIAN":
       return 17;
-    case "Vietnamese":
+    case "VIETNAMESE":
       return 18;
-    case "White":
+    case "WHITE/EUROPEAN":
+    case "WHITE":
       return 19;
-    case "Japanese":
+    case "JAPANESE":
       return 20;
-    case "Mexican":
+    case "MEXICAN":
       return 21;
-    case "Refused":
+    case "REFUSED":
+    case "N/A":
       return -7;
+    case "DON-T_KNOW":
+      return -9;
+    case "OTHER (ARABIC)":
+      return "ARABIC";
+    case "OTHER (SPECIFY)HISPANICS":
+      return "HISPANIC";
     default:
-      return raceString;
+      return raceString.trim().toUpperCase();
   }
 };
 
@@ -146,12 +168,26 @@ export const handleClientDemographics = (client) => {
   const client_bilingual = client.demographics.bilingual
     ? client.demographics.bilingual
     : -9;
-  client.SpeakOtherLanguage_EN = convertBilingual(client_bilingual);
+  client.SpeakOtherLanguage_EN =
+    client_bilingual != -9
+      ? convertBilingual(client_bilingual)
+      : client_bilingual;
   client.SpeakWhatLanguage_EN =
-    client.SpeakOtherLanguage_EN === 1 ? client_bilingual : -1;
-  client.SpeakOtherLanguage_ES = convertBilingual(client_bilingual);
+    client.SpeakOtherLanguage_EN === 1
+      ? client_bilingual === "Yes"
+        ? "SPANISH"
+        : -1
+      : -1;
+  client.SpeakOtherLanguage_ES =
+    client_bilingual != -9
+      ? convertBilingual(client_bilingual)
+      : client_bilingual;
   client.SpeakWhatLanguage_ES =
-    client.SpeakOtherLanguage_EN === 1 ? client_bilingual : -1;
+    client.SpeakOtherLanguage_EN === 1
+      ? client_bilingual === "Yes"
+        ? "SPANISH"
+        : -1
+      : -1;
 
   delete client.demographics;
   return client;
