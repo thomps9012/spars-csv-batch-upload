@@ -1,7 +1,8 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 import { MongoClient } from "mongodb";
-
+import { handleClientDemographics } from "./clientMethods.js";
+import { handleIntake, handleNonIntakeKeys } from "./interviewMethods.js";
 const { MONGODB_URI, DB_NAME } = process.env;
 const client = new MongoClient(MONGODB_URI);
 const db = client.db(DB_NAME);
@@ -10,7 +11,7 @@ const clients_collection = db.collection("client");
 
 async function main() {
   await client.connect();
-  const all_clients = await clients_collection
+  const all_intakes = await clients_collection
     .aggregate([
       {
         $lookup: {
@@ -18,40 +19,6 @@ async function main() {
           localField: "_id",
           foreignField: "client_id",
           as: "intake_interview",
-          pipeline: [
-            {
-              $project: {
-                spars_entry: 0,
-                client_id: 0,
-                _id: 0,
-              },
-            },
-          ],
-        },
-      },
-      {
-        $lookup: {
-          from: "followup",
-          localField: "_id",
-          foreignField: "client_id",
-          as: "followup_interviews",
-          pipeline: [
-            {
-              $project: {
-                spars_entry: 0,
-                client_id: 0,
-                _id: 0,
-              },
-            },
-          ],
-        },
-      },
-      {
-        $lookup: {
-          from: "discharge",
-          localField: "_id",
-          foreignField: "client_id",
-          as: "discharge_interview",
           pipeline: [
             {
               $project: {
@@ -75,19 +42,15 @@ async function main() {
           intake: {
             $arrayElemAt: ["$intake_interview", 0],
           },
-          followups: "$followup_interviews",
-          discharge: {
-            $arrayElemAt: ["$discharge_interview", 0],
-          },
         },
       },
     ])
     .toArray();
-  const test_client = all_clients[0];
-
-  // intake update
-  // followup update
-  console.info("Test Client => ", test_client);
+  const test_client = all_intakes[0];
+  let formatted_client = handleClientDemographics(test_client);
+  let formatted_interview = handleIntake(formatted_client);
+  formatted_interview = handleNonIntakeKeys(formatted_interview);
+  console.info("Test Intake => ", formatted_interview);
   //   console.info("All Clients => ", all_clients);
   return "done";
 }
