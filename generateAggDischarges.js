@@ -12,7 +12,7 @@ const db = client.db(DB_NAME);
 const clients_collection = db.collection("client");
 async function main() {
   await client.connect();
-  const all_intakes = await clients_collection
+  const all_discharges = await clients_collection
     .aggregate([
       {
         $lookup: {
@@ -47,14 +47,14 @@ async function main() {
       },
     ])
     .toArray();
-  const formatted_discharges = all_intakes
+  const formatted_discharges = all_discharges
     .map((intake) => {
       let formatted_client = handleClientDemographics(intake);
       const formatted_interview = handleDischarge(formatted_client);
       return formatted_interview;
     })
     .filter((record) => record != null);
-  writeToPath("test_intakes.csv", formatted_discharges, { headers: true })
+  writeToPath("test_discharges.csv", formatted_discharges, { headers: true })
     .on("error", (err) => console.error(err))
     .on("finish", () => console.log("done"));
 }

@@ -41,6 +41,7 @@ const convertHousing = (housingString) => {
       return 4;
     case "SOBER LIVING HOUSE":
     case "RESIDENTIAL TREATMENT CENTER":
+    case "OTHER (PLEASE SPECIFY) NEXT STEP":
       return 5;
     case "INSTITUTIONAL SETTING":
       return 6;
@@ -181,6 +182,97 @@ const handleNonIntakeKeys = (record) => {
   return record;
 };
 
+const handleFollowUpCarePerception = (record) => {
+  const {
+    belief_in_growth,
+    free_to_complain,
+    information_rights,
+    life_responsibility,
+    warned_of_side_effects,
+    respected_privacy,
+    culturaly_sensitive,
+    obtained_information,
+    encouraged_support_groups,
+    comfortable_with_questions,
+    decided_treatment_goals,
+    enjoyed_services,
+    satisfied_with_treatment,
+    would_recommend,
+  } = record.care_perception;
+  record.Recover = belief_in_growth ? belief_in_growth : -2;
+  record.Complain = free_to_complain ? free_to_complain : -2;
+  record.Rights = information_rights ? information_rights : -2;
+  record.Responsibility = life_responsibility ? life_responsibility : -2;
+  record.SideEffects = warned_of_side_effects ? warned_of_side_effects : -2;
+  record.SharingTreatmentInformation = respected_privacy
+    ? respected_privacy
+    : -2;
+  record.SensitiveToCulture = culturaly_sensitive ? culturaly_sensitive : -2;
+  record.InformationNeeded = obtained_information ? obtained_information : -2;
+  record.ConsumerRunPrograms = encouraged_support_groups
+    ? encouraged_support_groups
+    : -2;
+  record.ComfortableAskingQuestions = comfortable_with_questions
+    ? comfortable_with_questions
+    : -2;
+  record.TreatmentGoals = decided_treatment_goals
+    ? decided_treatment_goals
+    : -2;
+  record.LikeServices = enjoyed_services ? enjoyed_services : -2;
+  record.Choices = satisfied_with_treatment ? satisfied_with_treatment : -2;
+  record.RecommendAgency = would_recommend ? would_recommend : -2;
+  return record;
+};
+
+const handleFollowupServices = (record) => {
+  const { core, support } = record.services_received;
+  const {
+    screening,
+    assessment,
+    treatment_planning,
+    psychopharmacology,
+    mental_health,
+    cooccurring_conditions,
+    case_management,
+    trauma_specific,
+    provider_referral: core_referral,
+  } = core;
+  const {
+    medical_care,
+    employment,
+    family_support,
+    child_care,
+    transportation,
+    education,
+    housing,
+    social_activites,
+    consumer_services,
+    HIV_testing,
+    provider_referral: support_referral,
+  } = support;
+  record.Svc_Screening = screening ? screening : -2;
+  record.Svc_Assessment = assessment ? assessment : -2;
+  record.Svc_TreatmentPlanning = treatment_planning ? treatment_planning : -2;
+  record.Psychopharmacological = psychopharmacology ? psychopharmacology : -2;
+  record.Svc_MentalHealth = mental_health ? mental_health : -2;
+  record.Svc_CoOccuring = cooccurring_conditions ? cooccurring_conditions : -2;
+  record.Svc_CaseManagement = case_management ? case_management : -2;
+  record.Svc_TraumaSpecific = trauma_specific ? trauma_specific : -2;
+  record.Svc_ReferredCare = core_referral ? core_referral : -2;
+  record.Svc_MedicalCare = medical_care ? medical_care : -2;
+  record.Svc_Employment = employment ? employment : -2;
+  record.Svc_Family = family_support ? family_support : -2;
+  record.Svc_ChildCare = child_care ? child_care : -2;
+  record.Svc_Transportation = transportation ? transportation : -2;
+  record.Svc_Education = education ? education : -2;
+  record.Svc_Housing = housing ? housing : -2;
+  record.Svc_SocialRecreational = social_activites ? social_activites : -2;
+  record.Svc_ConsumerOperated = consumer_services ? consumer_services : -2;
+  record.Svc_HIVTesting = HIV_testing ? HIV_testing : -2;
+  record.Svc_ReferredSupport = support_referral ? support_referral : -2;
+  return record;
+};
+
 const handleDischargeCarePerception = (record) => {
   const {
     belief_in_growth,
@@ -198,20 +290,28 @@ const handleDischargeCarePerception = (record) => {
     satisfied_with_treatment,
     would_recommend,
   } = record.discharge.care_perception;
-  record.record.Recover = belief_in_growth;
-  record.Complain = free_to_complain;
-  record.Rights = information_rights;
-  record.Responsibility = life_responsibility;
-  record.SideEffects = warned_of_side_effects;
-  record.SharingTreatmentInformation = respected_privacy;
-  record.SensitiveToCulture = culturaly_sensitive;
-  record.InformationNeeded = obtained_information;
-  record.ConsumerRunPrograms = encouraged_support_groups;
-  record.ComfortableAskingQuestions = comfortable_with_questions;
-  record.TreatmentGoals = decided_treatment_goals;
-  record.LikeServices = enjoyed_services;
-  record.Choices = satisfied_with_treatment;
-  record.RecommendAgency = would_recommend;
+  record.Recover = belief_in_growth ? belief_in_growth : -2;
+  record.Complain = free_to_complain ? free_to_complain : -2;
+  record.Rights = information_rights ? information_rights : -2;
+  record.Responsibility = life_responsibility ? life_responsibility : -2;
+  record.SideEffects = warned_of_side_effects ? warned_of_side_effects : -2;
+  record.SharingTreatmentInformation = respected_privacy
+    ? respected_privacy
+    : -2;
+  record.SensitiveToCulture = culturaly_sensitive ? culturaly_sensitive : -2;
+  record.InformationNeeded = obtained_information ? obtained_information : -2;
+  record.ConsumerRunPrograms = encouraged_support_groups
+    ? encouraged_support_groups
+    : -2;
+  record.ComfortableAskingQuestions = comfortable_with_questions
+    ? comfortable_with_questions
+    : -2;
+  record.TreatmentGoals = decided_treatment_goals
+    ? decided_treatment_goals
+    : -2;
+  record.LikeServices = enjoyed_services ? enjoyed_services : -2;
+  record.Choices = satisfied_with_treatment ? satisfied_with_treatment : -2;
+  record.RecommendAgency = would_recommend ? would_recommend : -2;
   return record;
 };
 
@@ -241,26 +341,26 @@ const handleDischargeServices = (record) => {
     HIV_testing,
     provider_referral: support_referral,
   } = support;
-  record.Svc_Screening = screening;
-  record.Svc_Assessment = assessment;
-  record.Svc_TreatmentPlanning = treatment_planning;
-  record.Psychopharmacological = psychopharmacology;
-  record.Svc_MentalHealth = mental_health;
-  record.Svc_CoOccuring = cooccurring_conditions;
-  record.Svc_CaseManagement = case_management;
-  record.Svc_TraumaSpecific = trauma_specific;
-  record.Svc_ReferredCare = core_referral;
-  record.Svc_MedicalCare = medical_care;
-  record.Svc_Employment = employment;
-  record.Svc_Family = family_support;
-  record.Svc_ChildCare = child_care;
-  record.Svc_Transportation = transportation;
-  record.Svc_Education = education;
-  record.Svc_Housing = housing;
-  record.Svc_SocialRecreational = social_activites;
-  record.Svc_ConsumerOperated = consumer_services;
-  record.Svc_HIVTesting = HIV_testing;
-  record.Svc_ReferredSupport = support_referral;
+  record.Svc_Screening = screening ? screening : -2;
+  record.Svc_Assessment = assessment ? assessment : -2;
+  record.Svc_TreatmentPlanning = treatment_planning ? treatment_planning : -2;
+  record.Psychopharmacological = psychopharmacology ? psychopharmacology : -2;
+  record.Svc_MentalHealth = mental_health ? mental_health : -2;
+  record.Svc_CoOccuring = cooccurring_conditions ? cooccurring_conditions : -2;
+  record.Svc_CaseManagement = case_management ? case_management : -2;
+  record.Svc_TraumaSpecific = trauma_specific ? trauma_specific : -2;
+  record.Svc_ReferredCare = core_referral ? core_referral : -2;
+  record.Svc_MedicalCare = medical_care ? medical_care : -2;
+  record.Svc_Employment = employment ? employment : -2;
+  record.Svc_Family = family_support ? family_support : -2;
+  record.Svc_ChildCare = child_care ? child_care : -2;
+  record.Svc_Transportation = transportation ? transportation : -2;
+  record.Svc_Education = education ? education : -2;
+  record.Svc_Housing = housing ? housing : -2;
+  record.Svc_SocialRecreational = social_activites ? social_activites : -2;
+  record.Svc_ConsumerOperated = consumer_services ? consumer_services : -2;
+  record.Svc_HIVTesting = HIV_testing ? HIV_testing : -2;
+  record.Svc_ReferredSupport = support_referral ? support_referral : -2;
   return record;
 };
 
@@ -480,8 +580,151 @@ export const handleIntake = (record) => {
   return null;
 };
 
+export const handleFollowup = (record) => {
+  const {
+    functioning,
+    interview_info,
+    feelings,
+    crime_info,
+    social_connectedness,
+    housing_stability,
+    education_employment,
+  } = record;
+  record.Assessment = "0601";
+  record.FirstReceivedServicesDate = handleInterviewDate(interview_info.date);
+  record.GrantID = "SM85150";
+  record.SiteID = "NORA_DS";
+  record.ConductedInterview = 1;
+  record.InterviewDate = interview_info.date;
+  record.WhyNotConducted = -1;
+  record.WhoAdministered = 7;
+  record.WhoAdministeredSpec = -1;
+  //   military;
+  record.EverServed = record.military.served_in_military
+    ? record.military.served_in_military
+    : -9;
+  record.ActiveDuty_Self = record.military.active_duty
+    ? record.military.active_duty
+    : -9;
+  //   functioning
+  const {
+    does_well_in_school,
+    gets_along_with_family,
+    gets_along_with_others,
+    handle_daily_life,
+    handle_unexpected_events,
+    is_social,
+    overall_mental_health,
+  } = functioning;
+  record.OverallMentalHealth = convertMentalHealth(overall_mental_health);
+  record.HandlingDailyLife = handle_daily_life;
+  record.DealwithUnexpectedEvents = handle_unexpected_events;
+  record.GetsAlongWithFriends = gets_along_with_others;
+  record.GetsAlongWithFamily = gets_along_with_family;
+  record.SocialSituations = is_social;
+  record.SchoolOrWork = does_well_in_school;
+  //   feelings
+  record.SafePlaceToLive = -9;
+  const {
+    bothered_by_problems,
+    depressed,
+    hopeless,
+    life_was_an_effort,
+    nervous,
+    restless,
+    worthless,
+  } = feelings;
+  record.Nervous = nervous;
+  record.Hopeless = hopeless;
+  record.Restless = restless;
+  record.Depressed = depressed;
+  record.EverythingEffort = life_was_an_effort;
+  record.Worthless = worthless;
+  record.PsychologicalEmotionalProblems = bothered_by_problems;
+  //   housing stability
+  const {
+    correctional_facility,
+    detox,
+    emergency_department,
+    homeless,
+    satisfied_with_housing,
+    mental_health_care,
+    living_situation,
+  } = housing_stability;
+
+  record.BeenHomeless = homeless;
+  record.SpentTimeHospitalMHC = mental_health_care;
+  record.SpentTimeDetox = detox;
+  record.SpentTimeJail = correctional_facility;
+  record.SpentTimeER = emergency_department;
+  record.LivingConditionsSatisfaction = satisfied_with_housing;
+  record.Housing = convertHousing(living_situation);
+  record.OtherHousingSpec =
+    record.Housing === 9
+      ? convertOtherHousing(living_situation.trim().toUpperCase())
+      : -1;
+  //   education employment
+  const {
+    highest_lvl_education,
+    currently_employed,
+    enough_money,
+    enrolled_in_education,
+  } = education_employment;
+  record.Enrolled = enrolled_in_education;
+  record.Education = convertEducation(
+    highest_lvl_education ? highest_lvl_education : ""
+  );
+  record.Employment = convertEmployment(currently_employed);
+  record.OtherEmploymentSpec =
+    record.Employment === 8
+      ? convertOtherEmployment(currently_employed.trim().toUpperCase())
+      : "";
+  record.EnoughMoneyForNeeds = enough_money;
+  //   social connectedness
+  const {
+    accomplish_goals,
+    crisis_support,
+    happy_friendships,
+    recovery_support,
+    social_networks,
+  } = social_connectedness;
+  record.Friendships = happy_friendships;
+  record.EnjoyPeople = social_networks;
+  record.BelongInCommunity = social_connectedness.belong_in_community
+    ? social_connectedness.belong_in_community
+    : -9;
+  record.SupportFromFamily = crisis_support;
+  record.SupportFamilyFriends = recovery_support;
+  record.GenerallyAccomplishGoal = accomplish_goals;
+  //   crime info
+  const { arrested, jail_time } = crime_info;
+  record.SpentTimeJailorProbation = jail_time;
+  record.BeenArrested = arrested;
+  // followup specific
+  record.LastServiceDate = "UNKNOWN";
+  record.DischargeDate = "01/1869";
+  record.DischargeStatus = -1;
+  record.OtherDischargeStatus = "N/A";
+  let firstStage = handleFollowUpCarePerception(record);
+  let secondStage = handleFollowupServices(firstStage);
+  let thirdStage = handleUnknownKeys(secondStage);
+  let fourthStage = handleNonCCBHCKeys(thirdStage);
+  delete record.functioning;
+  delete record.interview_info;
+  delete record.feelings;
+  delete record.crime_info;
+  delete record.social_connectedness;
+  delete record.housing_stability;
+  delete record.education_employment;
+  delete record.military;
+  delete record.care_perception;
+  delete record.services_received;
+  delete record.family_living_conditions;
+  return fourthStage;
+};
+
 export const handleDischarge = (record) => {
-  const interview_data = record.intake;
+  const interview_data = record.discharge;
   if (interview_data) {
     const {
       functioning,
