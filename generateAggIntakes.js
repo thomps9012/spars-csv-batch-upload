@@ -54,7 +54,6 @@ async function main() {
       return formatted_interview;
     })
     .filter((record) => record != null);
-  console.info(formatted_intakes.find(({ ClientID }) => ClientID === 2042));
   writeToPath("test_intakes.csv", formatted_intakes, { headers: true })
     .on("error", (err) => console.error(err))
     .on("finish", () => console.log("done"));
