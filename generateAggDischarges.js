@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import { MongoClient } from "mongodb";
 import { handleClientDemographics } from "./clientMethods.js";
-import { handleIntake } from "./interviewMethods.js";
+import { handleDischarge } from "./interviewMethods.js";
 import { writeToPath } from "@fast-csv/format";
 const { MONGODB_URI, DB_NAME } = process.env;
 const client = new MongoClient(MONGODB_URI);
@@ -16,10 +16,10 @@ async function main() {
     .aggregate([
       {
         $lookup: {
-          from: "intake",
+          from: "discharge",
           localField: "_id",
           foreignField: "client_id",
-          as: "intake_interview",
+          as: "discharge_interview",
           pipeline: [
             {
               $project: {
@@ -40,22 +40,21 @@ async function main() {
           Gender: "$demographics.gender",
           SexualIdentity: "$demographics.orientation",
           demographics: 1,
-          intake: {
-            $arrayElemAt: ["$intake_interview", 0],
+          discharge: {
+            $arrayElemAt: ["$discharge_interview", 0],
           },
         },
       },
     ])
     .toArray();
-  const formatted_intakes = all_intakes
+  const formatted_discharges = all_intakes
     .map((intake) => {
       let formatted_client = handleClientDemographics(intake);
-      const formatted_interview = handleIntake(formatted_client);
+      const formatted_interview = handleDischarge(formatted_client);
       return formatted_interview;
     })
     .filter((record) => record != null);
-  console.info(formatted_intakes.find(({ ClientID }) => ClientID === 2042));
-  writeToPath("test_intakes.csv", formatted_intakes, { headers: true })
+  writeToPath("test_intakes.csv", formatted_discharges, { headers: true })
     .on("error", (err) => console.error(err))
     .on("finish", () => console.log("done"));
 }
