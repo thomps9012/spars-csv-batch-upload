@@ -50,11 +50,6 @@ async function main() {
       },
     ])
     .toArray();
-  // const test_client = all_intakes[0];
-  // let formatted_client = handleClientDemographics(test_client);
-  // let formatted_interview = handleIntake(formatted_client);
-  // formatted_interview = handleNonIntakeKeys(formatted_interview);
-  // console.info("Test Intake => ", formatted_interview);
   const formatted_intakes = all_intakes
     .map((intake) => {
       let formatted_client = handleClientDemographics(intake);
