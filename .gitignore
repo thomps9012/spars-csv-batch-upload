@@ -5,3 +5,7 @@ server.ts
 models
 test_intakes.csv
 test_followups.csv
+test_discharges.csv
+yarn.lock
+.vscode
+generateCSV.js

@@ -1,5 +1,4 @@
 import * as dotenv from "dotenv";
-
 dotenv.config();
 import { MongoClient } from "mongodb";
 import { handleClientDemographics } from "./clientMethods.js";
@@ -10,7 +9,7 @@ const client = new MongoClient(MONGODB_URI);
 const db = client.db(DB_NAME);
 
 const followups = db.collection("followup");
-async function main() {
+export const generateAggFollowups = async (file_name) => {
   await client.connect();
   const all_followups = await followups
     .aggregate([
@@ -65,11 +64,14 @@ async function main() {
       return formatted_interview;
     })
     .filter((record) => record != null);
-  writeToPath("test_followups.csv", formatted_followups, { headers: true })
+  writeToPath(file_name + ".csv", formatted_followups, { headers: true })
     .on("error", (err) => console.error(err))
-    .on("finish", () => console.log("done"));
-}
-
-main()
-  .catch(console.error)
-  .finally(() => client.close());
+    .on("finish", () => {
+      console.log(
+        "\u001b[35mFollowups File Successfully Generated \nRecords can be found in " +
+          file_name +
+          ".csv"
+      );
+      client.close();
+    });
+};
