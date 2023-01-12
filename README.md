@@ -1,3 +1,5 @@
+![SPARS Logo](./spars-logo.png?raw=true "Not Affiliated with SPARS")
+
 # SPARS CSV Batch Upload Formatter
 
 ## Description
@@ -39,7 +41,16 @@ You'll then be prompted for the names of your csv files and the resulting files 
 
 ## Acknowledgements
 
-Fast CSV
-NPM Inquirer
-MongoDB
-Dotenv
+- [Fast-CSV](https://c2fo.github.io/fast-csv/)
+- [Inquirer.js](https://github.com/SBoudrias/Inquirer.js#readme)
+- [MongoDB Node.js Driver](https://github.com/mongodb/node-mongodb-native)
+- [dotenv](https://github.com/motdotla/dotenv#readme)
+- [SPARS CMHS]("https://spars.samhsa.gov/")
+
+## Disclaimer
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+1. This program is not officially affiliated with the SPARS, CMHS, CSAT, or any other governmental programs
+2. Feel free to distribute or refactor this program as you see fit, if you have an amazing improvment, feel free to open a pull request
+3. The .gitignore only currently will prevent files following the `test_intakes.csv` naming convention, ensure that you aren't pushing your client's information to your repo
